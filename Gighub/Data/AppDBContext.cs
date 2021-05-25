@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Gighub.Models;
 
 namespace Gighub.Data
 {
@@ -13,5 +14,7 @@ namespace Gighub.Data
         {
 
         }
+        public DbSet<Gig> Gig { get; set; }
+        public DbSet<Genre> Genres { get; set; }
     }
 }

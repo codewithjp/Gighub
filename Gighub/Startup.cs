@@ -1,4 +1,6 @@
 using Gighub.Data;
+using Gighub.DBInitializer;
+using Gighub.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,10 +31,13 @@ namespace Gighub
             services.AddControllersWithViews();
             services.AddDbContext<AppDBContext>(op => op.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AppDBContext>();
+            services.AddTransient<IGigHubService, GigHubService>();
+            services.AddScoped<IDBInitializer, DBInitializer.DBInitializer>();
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env , IDBInitializer dBInitializer)
         {
             if (env.IsDevelopment())
             {
@@ -44,11 +49,15 @@ namespace Gighub
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            // For Initail Setup Of Admin
+            dBInitializer.Initalize();
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

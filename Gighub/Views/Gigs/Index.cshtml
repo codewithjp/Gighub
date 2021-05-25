@@ -1,0 +1,21 @@
+﻿
+
+
+
+@if (TempData.ContainsKey(""))
+{
+    
+    <div class="alert alert-success alert-dismissible fade show" role="alert" data-mdb-color="success">
+        <i class="fas fa-check-circle me-3"></i> @TempData["newUserSignup"] , admin is created.
+        <button type="button" class="btn-close" data-mdb-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+<div class="alert alert-dismissible fade show alert-warning" role="alert" data-mdb-color="warning">
+    <strong>Holy guacamole!</strong> You should check in on some of those fields below.
+    <button type="button" class="btn-close" data-mdb-dismiss="alert" aria-label="Close"></button>
+</div>
+
+<div class="alert alert-success alert-dismissible fade show" role="alert" data-mdb-color="success">
+    <i class="fas fa-check-circle me-3"></i> @TempData["newUserSignup"] , admin is created.
+    <button type="button" class="btn-close" data-mdb-dismiss="alert" aria-label="Close"></button>
+</div>

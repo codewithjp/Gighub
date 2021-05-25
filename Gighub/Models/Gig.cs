@@ -17,7 +17,9 @@ namespace Gighub.Models
         [ForeignKey("ArtistId")]
         public IdentityUser  IdentityUser { get; set; }
         public DateTime DateTime { get; set; }
+        public string Venue { get; set; }
         public int GenreId { get; set; }
+       
 
         [ForeignKey("GenreId")]
         public Genre Genre { get; set; }
