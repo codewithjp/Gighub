@@ -49,12 +49,13 @@ namespace Gighub.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(GigsViewModel model)
         {
+            ViewBag.GenreList = _gigHubService.GetGenres().GetAwaiter().GetResult();
             if (!ModelState.IsValid)
                 return View(model);
             var gig = new Gig
             {
                 Venue = model.Venue,
-                DateTime = Convert.ToDateTime(model.Date),
+                DateTime =model.GetDateTime() ,    //DateTime.Parse(string.Format("{0} {1}", model.Date,model.Time)),
                 GenreId = model.GenreId,
                 ArtistId = User.FindFirstValue(ClaimTypes.NameIdentifier)
             };

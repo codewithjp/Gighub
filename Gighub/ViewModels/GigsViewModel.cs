@@ -9,6 +9,7 @@ namespace Gighub.ViewModels
     public class GigsViewModel
     {
         [Required]
+        [FutureDates(ErrorMessage ="Only future dates allowed")]
         public string Date { get; set; }
 
         [Required]
@@ -22,5 +23,9 @@ namespace Gighub.ViewModels
         [Required]
         [Display(Name ="Genre")]
         public int GenreId { get; set; }
+        public DateTime GetDateTime() 
+        {
+            return DateTime.Parse(string.Format("{0} {1}", Date, Time));
+        }
     }
 }

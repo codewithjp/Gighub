@@ -8,6 +8,7 @@ namespace Gighub.Utility
 {
     public static class Helper
     {
+        
         public const string Artist= "Artist";
         public const string Admin = "Admin";
         public const string Follower = "Follower";
