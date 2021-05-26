@@ -18,15 +18,31 @@ namespace Gighub.Service
             _appDB = appDB;
         }
 
-        public async Task<int> SaveAttendance(int gigId,string userId)
+
+        public async Task<int> SaveFollowing(Following following)
         {
-            var exists = await _appDB.Attendances.AnyAsync(a => a.Userid == userId && a.GigId == gigId);
+            var exists = await _appDB.Followings.AnyAsync(a => a.FollowerId == following.FollowerId && a.FolloweeId == following.FolloweeId);
+            if (exists)
+                return 0;
+            var follow = new Following
+            {
+                FolloweeId = following.FolloweeId,
+                FollowerId = following.FollowerId
+            };
+            await _appDB.Followings.AddAsync(follow);
+            await _appDB.SaveChangesAsync();
+            return 1;
+        }
+
+        public async Task<int> SaveAttendance(Attendance atten)
+        {
+            var exists = await _appDB.Attendances.AnyAsync(a => a.Userid == atten.Userid && a.GigId == atten.GigId);
             if (exists)
                 return 0;
             var attendance = new Attendance
             {
-                GigId=gigId,
-                Userid=userId
+                GigId= atten.GigId,
+                Userid= atten.Userid
             };
             await _appDB.Attendances.AddAsync(attendance);
             await _appDB.SaveChangesAsync();

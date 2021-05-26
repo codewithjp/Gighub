@@ -14,9 +14,11 @@ namespace Gighub.Utility
         public const string Follower = "Follower";
 
         public static string attendanceAdded = "Attendance added successfully.";
-        public static string appointmentUpdated = "Appointment updated successfully.";
-        public static string appointmentDeleted = "Appointment deleted successfully.";
         public static string attendanceExists = "Attendance already exists for selected gig.";
+
+        public static string followerAdded = "Follower added successfully.";
+        public static string followerExist = "You already follow the artist.";
+      
         public static string appointmentNotExists = "Appointment not exists.";
         public static string meetingConfirm = "Meeting confirm successfully.";
         public static string meetingConfirmError = "Error while confirming meeting.";

@@ -1,4 +1,5 @@
-﻿using Gighub.Service;
+﻿using Gighub.Models;
+using Gighub.Service;
 using Gighub.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -30,14 +31,19 @@ namespace Gighub.Controllers.Api
         }
 
 
-            [HttpPost("Attend/{id}")]
+        [HttpPost("Attend/{id}")]
         public async Task<IActionResult> Attend(int id)
         {
             CommonResponse<int> commonResponse = new();
            
             try
             {
-                commonResponse.Status = await _gigHubService.SaveAttendance(id, User.FindFirstValue(ClaimTypes.NameIdentifier));
+                var attendance = new Attendance
+                {
+                    GigId = id,
+                    Userid = User.FindFirstValue(ClaimTypes.NameIdentifier)
+                };
+                commonResponse.Status = await _gigHubService.SaveAttendance(attendance);
                 commonResponse.Message = commonResponse.Status==1 ? Helper.attendanceAdded : Helper.attendanceExists;
             }
             catch (Exception ex)

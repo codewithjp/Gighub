@@ -13,6 +13,8 @@ namespace Gighub.Service
 
         public IEnumerable<Gig> GetGigs();
 
-        public Task<int> SaveAttendance(int gigId, string userId);
+        public Task<int> SaveAttendance(Attendance attendance);
+
+        public Task<int> SaveFollowing(Following following);
     }
 }
