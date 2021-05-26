@@ -18,9 +18,24 @@ namespace Gighub.Service
             _appDB = appDB;
         }
 
+        public async Task<int> SaveAttendance(int gigId,string userId)
+        {
+            var exists = await _appDB.Attendances.AnyAsync(a => a.Userid == userId && a.GigId == gigId);
+            if (exists)
+                return 0;
+            var attendance = new Attendance
+            {
+                GigId=gigId,
+                Userid=userId
+            };
+            await _appDB.Attendances.AddAsync(attendance);
+            await _appDB.SaveChangesAsync();
+            return 1;
+        }
+
         public IEnumerable<Gig> GetGigs()
         {
-            return _appDB.Gig.Include(g => g.AppUser).Where(g => g.DateTime > DateTime.Now);
+            return _appDB.Gig.Include(g => g.AppUser).Include(g=>g.Genre).Where(g => g.DateTime > DateTime.Now);
         }
 
 
@@ -34,5 +49,7 @@ namespace Gighub.Service
             _appDB.Gig.Add(gig);
             _appDB.SaveChanges();
         }
+
+       
     }
 }

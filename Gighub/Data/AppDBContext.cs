@@ -16,5 +16,6 @@ namespace Gighub.Data
         }
         public DbSet<Gig> Gig { get; set; }
         public DbSet<Genre> Genres { get; set; }
+        public DbSet<Attendance> Attendances { get; set; }
     }
 }

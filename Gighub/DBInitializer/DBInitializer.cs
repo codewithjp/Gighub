@@ -26,7 +26,7 @@ namespace Gighub.DBInitializer
         {
             try
             {
-                if (_dbContext.Database.GetPendingMigrations().Count() > 0)
+                if (_dbContext.Database.GetPendingMigrations().Any())
                     _dbContext.Database.Migrate();
             }
             catch (Exception)
