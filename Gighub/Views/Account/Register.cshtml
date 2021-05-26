@@ -17,11 +17,18 @@ else
 <div class="row">
     <div class="col-md-4">
         <form method="post" asp-action="Register">
-            <div asp-validation-summary="All" class="text-danger"></div>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <!-- Email input -->
+            <div class="form-group mb-2">
+                <label class="form-label" asp-for="Name"></label>
+                <input asp-for="Name" class="form-control" autofocus />
+                <span class="text-danger" asp-validation-for="Name"></span>
+            </div>
+
             <!-- Email input -->
             <div class="form-group mb-2">
                 <label class="form-label" asp-for="Email"></label>
-                <input asp-for="Email" class="form-control" />
+                <input asp-for="Email" class="form-control"  />
                 <span class="text-danger" asp-validation-for="Email"></span>
             </div>
 
@@ -52,7 +59,7 @@ else
                 <button type="submit" class="btn btn-primary btn-block ">Register</button>
                 <p>Have an account ?  <a asp-action="Login">Log in</a></p>
             </div>
-          
+
         </form>
     </div>
 </div>

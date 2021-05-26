@@ -30,7 +30,7 @@ namespace Gighub
         {
             services.AddControllersWithViews();
             services.AddDbContext<AppDBContext>(op => op.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AppDBContext>();
+            services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<AppDBContext>();
             services.AddTransient<IGigHubService, GigHubService>();
             services.AddScoped<IDBInitializer, DBInitializer.DBInitializer>();
            

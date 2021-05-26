@@ -1,5 +1,5 @@
 ﻿
-@inject Microsoft.AspNetCore.Identity.SignInManager<Microsoft.AspNetCore.Identity.IdentityUser> signInManager
+@inject Microsoft.AspNetCore.Identity.SignInManager<Gighub.Data.AppUser> signInManager
 
 @if (signInManager.IsSignedIn(User))
 {

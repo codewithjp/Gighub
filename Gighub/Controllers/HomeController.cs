@@ -1,4 +1,6 @@
-﻿using Gighub.Models;
+﻿
+using Gighub.Models;
+using Gighub.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -12,15 +14,17 @@ namespace Gighub.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IGigHubService _gigHubService;
+       public HomeController(ILogger<HomeController> logger, IGigHubService gigHubService)
         {
             _logger = logger;
+            _gigHubService = gigHubService;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var gigList = _gigHubService.GetGigs();
+            return View(gigList);
         }
 
         public IActionResult Privacy()

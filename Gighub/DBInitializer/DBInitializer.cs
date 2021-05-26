@@ -13,9 +13,9 @@ namespace Gighub.DBInitializer
     public class DBInitializer : IDBInitializer
     {
         private readonly AppDBContext _dbContext;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        public DBInitializer(AppDBContext dbContext, UserManager<IdentityUser> userManager,
+        public DBInitializer(AppDBContext dbContext, UserManager<AppUser> userManager,
            RoleManager<IdentityRole> roleManager )
         {
             _dbContext = dbContext;
@@ -42,7 +42,7 @@ namespace Gighub.DBInitializer
                  _roleManager.CreateAsync(new IdentityRole(Helper.Artist)).GetAwaiter().GetResult();
                  _roleManager.CreateAsync(new IdentityRole(Helper.Follower)).GetAwaiter().GetResult();
 
-            _userManager.CreateAsync(new IdentityUser
+            _userManager.CreateAsync(new AppUser
             {
                 UserName = "admin@gmail.com",
                 Email = "admin@gmail.com",
@@ -50,7 +50,7 @@ namespace Gighub.DBInitializer
                
             }, "Admin@123").GetAwaiter().GetResult() ;
 
-            IdentityUser user = _dbContext.Users.FirstOrDefault(u => u.Email == "admin@gmail.com");
+            AppUser user = _dbContext.Users.FirstOrDefault(u => u.Email == "admin@gmail.com");
             _userManager.AddToRoleAsync(user, Helper.Admin).GetAwaiter().GetResult();
         }
     }

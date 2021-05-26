@@ -18,12 +18,16 @@ namespace Gighub.Service
             _appDB = appDB;
         }
 
+        public IEnumerable<Gig> GetGigs()
+        {
+            return _appDB.Gig.Include(g => g.AppUser).Where(g => g.DateTime > DateTime.Now);
+        }
+
+
         public async Task<IEnumerable<Genre>> GetGenres()
         {
            var result= await _appDB.Genres.ToListAsync();
             return result;
-
-
         }
         public void SaveGig(Gig gig)
         {

@@ -12,10 +12,10 @@ namespace Gighub.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, RoleManager<IdentityRole> roleManager)
+        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -64,10 +64,12 @@ namespace Gighub.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var user = new IdentityUser {
+            var user = new AppUser
+            {
             
             Email=model.Email,
             UserName=model.Email,
+            Name=model.Name
             };
             var result = await _userManager.CreateAsync(user,model.Password);
             if (result.Succeeded)

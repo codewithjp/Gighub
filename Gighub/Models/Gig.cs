@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Gighub.Data;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -15,7 +16,7 @@ namespace Gighub.Models
         public string ArtistId { get; set; }
 
         [ForeignKey("ArtistId")]
-        public IdentityUser  IdentityUser { get; set; }
+        public AppUser AppUser { get; set; }
         public DateTime DateTime { get; set; }
         public string Venue { get; set; }
         public int GenreId { get; set; }

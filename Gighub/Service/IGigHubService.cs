@@ -10,5 +10,7 @@ namespace Gighub.Service
     {
         public Task<IEnumerable<Genre>> GetGenres();
         public void SaveGig(Gig gig);
+
+        public IEnumerable<Gig> GetGigs();
     }
 }

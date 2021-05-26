@@ -5,7 +5,8 @@ namespace Gighub.ViewModels
 {
     public class RegisterViewModel
     {
-       
+
+        [Required]
         public string Name { get; set; }
 
         [EmailAddress]
