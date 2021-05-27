@@ -1,7 +1,7 @@
 ﻿@model Gighub.ViewModels.GigsViewModel
 
 @{
-    ViewData["Title"] = "Add a Gig";
+    ViewData["Title"] = Model.Heading;
 }
 
 
@@ -10,12 +10,12 @@
         <div class="card border shadow mb-3">
             <div class="card-header bg-primary text-white"><b>@ViewData["Title"]</b></div>
             <div class="card-body">
-                <form asp-action="Create">
-                    <div asp-validation-summary="All" class="text-danger"></div>
-
+                <form asp-action="@Model.Action" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                  
                     <div class="form-group mb-2">
                         <label class="form-label" asp-for="Venue"></label>
-                        <input asp-for="Venue" class="form-control"  autofocus/>
+                        <input asp-for="Venue" class="form-control" autofocus />
                         <span class="text-danger" asp-validation-for="Venue"></span>
                     </div>
                     <div class="form-group mb-2">
@@ -37,10 +37,11 @@
                         </select>
                         <span class="text-danger" asp-validation-for="Time"></span>
                     </div>
-
+                    
 
                     <div class="form-group ">
-                        <input type="submit" value="Save" class="btn btn-success " />&nbsp;
+                        <input asp-for="GigId" type="hidden" />
+                        <input type="submit" value="@Model.Action" class="btn  @(Model.GigId>0?"btn-primary":"btn-success") " />&nbsp;
                         <input type="button" value="Cancel" class="btn btn-light" />
 
                     </div>

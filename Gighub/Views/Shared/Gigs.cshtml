@@ -3,7 +3,7 @@
 @model Gighub.ViewModels.GigsViewModel
 
 @{
-    ViewData["Title"] = "Gigs I'm Attending";
+    ViewData["Title"] = Model.Heading;
 }
 <h2 class="text-primary">@Model.Heading</h2>
 @if (TempData.ContainsKey(""))

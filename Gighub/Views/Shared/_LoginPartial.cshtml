@@ -15,11 +15,12 @@
             </a>
             <!-- Dropdown menu -->
             <ul class="dropdown-menu  p-1" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item"asp-action="Mine" asp-controller="Gigs" asp-area="">My Upcoming Gigs</a></li>
                 <li><a class="dropdown-item"asp-action="Attending" asp-controller="Gigs" asp-area="">Gigs I'm Going</a></li>
                 <li>
                     <hr class="dropdown-divider" />
                 </li>
-                <li><a class="dropdown-item" href="#">Your Account</a></li>
+               
                 <li><a class="dropdown-item" href="#">Help</a></li>
                 <li><a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit()">Log Out</a></li>
             </ul>

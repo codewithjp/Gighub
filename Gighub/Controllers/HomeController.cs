@@ -30,7 +30,7 @@ namespace Gighub.Controllers
             var gigViewModel = new GigsViewModel()
             {
                 UpComingGigs = gigs,
-                Heading = Helper.upcomingGigs
+                Heading = Helper.hUpcomingGigs
             };
             return View("Gigs",gigViewModel); 
         }

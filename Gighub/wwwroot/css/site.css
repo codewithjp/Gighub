@@ -64,6 +64,8 @@ body {
   line-height: 60px; /* Vertically center the text there */
 }
 
+
+
 .ul-gigs{
     list-style:none;
 }
@@ -128,9 +130,15 @@ body {
 
         .ul-gigs > li .actions {
             font-size: 15px;
-            display: none;
+
+             display: none;
         }
 
         .ul-gigs > li:hover .actions {
+            cursor:pointer;
             display: block;
         }
+
+a,.btn-link {
+    text-decoration: none
+}

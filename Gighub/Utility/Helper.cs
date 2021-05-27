@@ -19,8 +19,11 @@ namespace Gighub.Utility
         public static string followerAdded = "Follower added successfully.";
         public static string followerExist = "You already follow the artist.";
 
-        public static string gigsIamAttending= "Gigs I'm Attending";
-        public static string upcomingGigs= "Upcoming Gigs";
+        public static string hGigsIamAttending= "Gigs I'm Attending";
+        public static string hUpcomingGigs= "Upcoming Gigs";
+
+        public static string hAddGig= "Add a Gig";
+        public static string hEditGig= "Edit a Gigs";
 
         public static string appointmentNotExists = "Appointment not exists.";
         public static string meetingConfirm = "Meeting confirm successfully.";

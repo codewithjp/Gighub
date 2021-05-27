@@ -27,8 +27,12 @@ namespace Gighub.Controllers
             _gigHubService = gigHubService;
             _userManager = userManager;
         }
-        
-       
+
+        public async Task<IActionResult> Mine()
+        {
+            var gigs = await _gigHubService.GetGigsByUserId(_userManager.GetUserId(User));
+            return View(gigs);
+        }
 
 
         public async Task<IActionResult> Attending()
@@ -37,23 +41,23 @@ namespace Gighub.Controllers
             var gigViewModel = new GigsViewModel()
             {
                 UpComingGigs = gigs,
-                Heading = Helper.gigsIamAttending
+                Heading = Helper.hGigsIamAttending
                 
             };
             return View("Gigs",gigViewModel);
         }
 
-        // GET: GigsController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
+       
 
         // GET: GigsController/Create
         public  IActionResult Create()
         {
             ViewBag.GenreList = _gigHubService.GetGenres().GetAwaiter().GetResult();
-            return View();
+            var gigViewModel = new GigsViewModel
+            {
+                Heading = Helper.hAddGig
+            };
+            return View("GigsForm",gigViewModel);
         }
 
         // POST: GigsController/Create
@@ -62,6 +66,7 @@ namespace Gighub.Controllers
         public ActionResult Create(GigsViewModel model)
         {
             ViewBag.GenreList = _gigHubService.GetGenres().GetAwaiter().GetResult();
+            
             if (!ModelState.IsValid)
                 return View(model);
             var gig = new Gig
@@ -69,36 +74,61 @@ namespace Gighub.Controllers
                 Venue = model.Venue,
                 DateTime =model.GetDateTime() ,    //DateTime.Parse(string.Format("{0} {1}", model.Date,model.Time)),
                 GenreId = model.GenreId,
-                ArtistId = User.FindFirstValue(ClaimTypes.NameIdentifier)
+                ArtistId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+              
             };
 
-            _gigHubService.SaveGig(gig);
+            _gigHubService.SaveGig(gig); //Save a Gig
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Mine));
         }
 
         // GET: GigsController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
+        {
+           
+            ViewBag.GenreList = await _gigHubService.GetGenres();
+            var gig = _gigHubService.GetGigsByGigId(id, _userManager.GetUserId(User));
+            var gigViewModel = new GigsViewModel
+            {
+                GenreId = gig.GenreId,
+                Venue = gig.Venue,
+                Date = gig.DateTime.ToString("d MMM yyyy"),
+                Time = gig.DateTime.ToString("HH:mm"),
+                GigId=gig.Id,
+                Heading=Helper.hEditGig
+            };
+
+            return View("GigsForm", gigViewModel);
+           
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Update(GigsViewModel model)
+        {
+            ViewBag.GenreList = _gigHubService.GetGenres().GetAwaiter().GetResult();
+
+            if (!ModelState.IsValid)
+                return View(model);
+            var gig = new Gig
+            {
+                Venue = model.Venue,
+                DateTime = model.GetDateTime(),   
+                GenreId = model.GenreId,
+                ArtistId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+                Id = model.GigId
+            };
+
+          _gigHubService.UpdateGig(gig); //Update a gig
+           return RedirectToAction(nameof(Mine));
+        }
+
+        // GET: GigsController/Details/5
+        public ActionResult Details(int id)
         {
             return View();
         }
 
-        // POST: GigsController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: GigsController/Delete/5
         public ActionResult Delete(int id)
         {
             return View();

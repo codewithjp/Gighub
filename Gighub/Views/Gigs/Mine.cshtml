@@ -1,0 +1,40 @@
+﻿
+
+@model IEnumerable<Gighub.Models.Gig>
+
+@{
+    ViewData["Title"] = "My Upcoming Gigs";
+}
+<h2 class="text-primary"> @ViewData["Title"]</h2>
+<hr />
+<ul class="ul-gigs">
+
+    @foreach (var gig in Model)
+    {
+        <li>
+            <div class="date">
+                <div class="month">
+                    @gig.DateTime.ToString("MMM")
+                </div>
+                <div class="day">
+                    @gig.DateTime.ToString("dd")
+                </div>
+                <div class="year">
+                    @gig.DateTime.ToString("yyyy")
+                </div>
+            </div>
+            <div class="details">
+                <div class="artist">
+                    @gig.Venue
+                </div>
+                <span class="genre">@gig.Genre.Name</span>
+               
+                <span class="actions">
+                    <a  href="@Url.Action("Edit","Gigs",new {id=gig.Id})">Edit</a> |
+                    <a  href="@Url.Action("Delete","Gigs",new {id=gig.Id})">Delete</a>
+                </span>
+               
+            </div>
+        </li>
+    }
+</ul>
