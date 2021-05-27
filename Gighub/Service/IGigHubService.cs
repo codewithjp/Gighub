@@ -8,6 +8,7 @@ namespace Gighub.Service
 {
    public interface IGigHubService
     {
+        public Task SaveChangesAsync();
         public Task<IEnumerable<Genre>> GetGenres();
         public void SaveGig(Gig gig);
 

@@ -31,10 +31,62 @@
                
                 <span class="actions">
                     <a  href="@Url.Action("Edit","Gigs",new {id=gig.Id})">Edit</a> |
-                    <a  href="@Url.Action("Delete","Gigs",new {id=gig.Id})">Delete</a>
+                    <a   data-id="@gig.Id" class="btn-delete">Cancel</a>
                 </span>
                
             </div>
         </li>
     }
 </ul>
+@section scripts{ 
+<script>
+    $(document).ready(function () {
+       
+        $(".btn-delete").click(function (e) {
+            var link = $(e.target);
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $.ajax({
+                        url: '/api/Gigs/Cancel/' + link.attr("data-id"),
+                        method: 'DELETE'
+                    })
+                        .done((response) => {
+                            if (response.status == 1) {
+
+                                link.parents('li').fadeOut(() => {
+                                    $(this).remove();
+                                });
+
+                                toastr.success(response.message);
+                                //Swal.fire(
+                                //    'Deleted!',
+                                //    'Your file has been deleted.',
+                                //    'success'
+                                //)
+                            }
+                            else
+                                toastr.error(response.message);
+                        })
+                        .fail(function () {
+                            toastr.error(`Something went wrong.`);
+                        })
+                }
+            })
+
+           
+        })
+
+    })
+
+    </script>
+
+}

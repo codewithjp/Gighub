@@ -13,6 +13,7 @@ namespace Gighub.Models
     {
         [Key]
         public int Id { get; set; }
+        public bool IsCanceled { get; set; }
         public string ArtistId { get; set; }
 
         [ForeignKey("ArtistId")]

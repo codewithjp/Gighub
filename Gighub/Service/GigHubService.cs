@@ -26,6 +26,13 @@ namespace Gighub.Service
         }
 
 
+        public async Task SaveChangesAsync()
+        {
+            await _appDB.SaveChangesAsync();
+        }
+
+
+
         public Gig GetGigsByGigId(int gigId, string userId)
         {
             var gig = _appDB.Gig.Single(g => g.Id == gigId && g.ArtistId==userId);
@@ -73,13 +80,13 @@ namespace Gighub.Service
 
         public IEnumerable<Gig> GetGigs()
         {
-            return _appDB.Gig.Include(g => g.AppUser).Include(g=>g.Genre).Where(g => g.DateTime > DateTime.Now).OrderBy(a => a.DateTime).ToList();
+            return _appDB.Gig.Include(g => g.AppUser).Include(g=>g.Genre).Where(g => g.DateTime > DateTime.Now && !g.IsCanceled).OrderBy(a => a.DateTime).ToList();
         }
 
         public async Task<IEnumerable<Gig>> GetGigsByUserId(string userId)
         {
             var gigs= await _appDB.Gig.Include(g => g.AppUser).Include(g => g.Genre)
-                            .Where(g => g.DateTime > DateTime.Now && g.ArtistId==userId).OrderBy(a => a.DateTime).ToListAsync();
+                            .Where(g => g.DateTime > DateTime.Now && g.ArtistId==userId && !g.IsCanceled).OrderBy(a => a.DateTime).ToListAsync();
             return gigs;
         }
 

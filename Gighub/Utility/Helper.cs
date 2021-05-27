@@ -25,7 +25,9 @@ namespace Gighub.Utility
         public static string hAddGig= "Add a Gig";
         public static string hEditGig= "Edit a Gigs";
 
-        public static string appointmentNotExists = "Appointment not exists.";
+        public static string cancelGigSuccess = "Gig is canceled successfully.";
+        public static string cancelGigFail = "There is some problem. Gig is not canceled.";
+
         public static string meetingConfirm = "Meeting confirm successfully.";
         public static string meetingConfirmError = "Error while confirming meeting.";
         public static string appointmentAddError = "Something went wront, Please try again.";
