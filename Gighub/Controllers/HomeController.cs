@@ -1,6 +1,8 @@
 ﻿
 using Gighub.Models;
 using Gighub.Service;
+using Gighub.Utility;
+using Gighub.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -23,8 +25,14 @@ namespace Gighub.Controllers
 
         public IActionResult Index()
         {
-            var gigList = _gigHubService.GetGigs();
-            return View(gigList);
+            var gigs = _gigHubService.GetGigs();
+
+            var gigViewModel = new GigsViewModel()
+            {
+                UpComingGigs = gigs,
+                Heading = Helper.upcomingGigs
+            };
+            return View("Gigs",gigViewModel); 
         }
 
         public IActionResult Privacy()

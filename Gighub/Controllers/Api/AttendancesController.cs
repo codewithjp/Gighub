@@ -1,7 +1,9 @@
-﻿using Gighub.Models;
+﻿using Gighub.Data;
+using Gighub.Models;
 using Gighub.Service;
 using Gighub.Utility;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -17,10 +19,11 @@ namespace Gighub.Controllers.Api
     public class AttendancesController : Controller
     {
         private readonly IGigHubService _gigHubService;
-
-        public AttendancesController(IGigHubService gigHubService)
+        private readonly UserManager<AppUser> _userManager;
+        public AttendancesController(IGigHubService gigHubService,  UserManager<AppUser> userManager)
         {
             _gigHubService = gigHubService;
+            _userManager = userManager;
         }
 
         [HttpGet("GetGenres")]
@@ -41,7 +44,7 @@ namespace Gighub.Controllers.Api
                 var attendance = new Attendance
                 {
                     GigId = id,
-                    Userid = User.FindFirstValue(ClaimTypes.NameIdentifier)
+                    Userid = _userManager.GetUserId(User)  //User.FindFirstValue(ClaimTypes.NameIdentifier)
                 };
                 commonResponse.Status = await _gigHubService.SaveAttendance(attendance);
                 commonResponse.Message = commonResponse.Status==1 ? Helper.attendanceAdded : Helper.attendanceExists;

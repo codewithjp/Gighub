@@ -1,0 +1,102 @@
+﻿
+
+@model Gighub.ViewModels.GigsViewModel
+
+@{
+    ViewData["Title"] = "Gigs I'm Attending";
+}
+<h2 class="text-primary">@Model.Heading</h2>
+@if (TempData.ContainsKey(""))
+{
+    <div class="alert alert-success  alert-dismissible fade show" role="alert">
+        <strong>
+            <i class="fas fa-check-circle "></i>&nbsp;
+            @TempData["newUserSignup"] , admin is created.
+        </strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+<hr />
+<ul class="ul-gigs">
+
+    @foreach (var gig in Model.UpComingGigs)
+    {
+        <li>
+            <div class="date">
+                <div class="month">
+                    @gig.DateTime.ToString("MMM")
+                </div>
+                <div class="day">
+                    @gig.DateTime.ToString("dd")
+                </div>
+                <div class="year">
+                    @gig.DateTime.ToString("yyyy")
+                </div>
+            </div>
+            <div class="details">
+                <div class="artist">
+                    @gig.AppUser.Name
+                </div>
+                <span class="genre">@gig.Genre.Name</span>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <button class="btn btn-sm btn-light toggle-attendance" data-id="@gig.Id">Going?</button>
+                    <button class="btn btn-sm btn-link toggle-follow" data-id="@gig.ArtistId">Follow?</button>
+                }
+            </div>
+        </li>
+    }
+</ul>
+
+@section scripts{
+
+    <script>
+        $(document).ready(function () {
+            $(".toggle-attendance").click(function (e) {
+                var button = $(e.target);
+                $.post('/api/Attendances/attend/' + button.attr("data-id"))
+                    .done((response) => {
+                        if (response.status == 1) {
+                            button.removeClass('btn-light').addClass('btn-info').text('Going');
+                            toastr.success(response.message);
+                        }
+                        else
+                            toastr.error(response.message);
+                    })
+                    .fail(function (jqXHR, textStatus, errorThrown) {
+                        toastr.error(`Something went wrong.`);
+                    })
+            })
+
+
+            $(".toggle-follow").click(function (e) {
+                var button = $(e.target);
+                $.ajax({
+
+                    url: '/api/Followings/follow',
+                    data: JSON.stringify({ followeeId: button.attr("data-id") }),
+                    contentType: 'application/json',
+                    method: 'Post'
+                })
+                    .done((response) => {
+                        if (response.status == 1) {
+                            button.text('Following');
+                            toastr.success(response.message);
+                        }
+                        else
+                            toastr.error(response.message);
+                    })
+                    .fail(function (jqXHR, textStatus, errorThrown) {
+                        toastr.error(`Something went wrong.`);
+                    })
+            })
+
+
+        })
+
+
+
+
+    </script>
+
+}

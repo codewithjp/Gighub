@@ -1,5 +1,7 @@
-﻿using Gighub.Models;
+﻿using Gighub.Data;
+using Gighub.Models;
 using Gighub.Service;
+using Gighub.Utility;
 using Gighub.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -18,17 +20,27 @@ namespace Gighub.Controllers
     public class GigsController : Controller
     {
         private readonly IGigHubService _gigHubService;
+        private readonly UserManager<AppUser> _userManager;
        
-        public GigsController(IGigHubService gigHubService)
+        public GigsController(IGigHubService gigHubService, UserManager<AppUser> userManager)
         {
             _gigHubService = gigHubService;
-          
+            _userManager = userManager;
         }
         
-        // GET: GigsController
-        public ActionResult Index()
+       
+
+
+        public async Task<IActionResult> Attending()
         {
-            return View();
+            var gigs = await _gigHubService.GetGigsAttending(_userManager.GetUserId(User));
+            var gigViewModel = new GigsViewModel()
+            {
+                UpComingGigs = gigs,
+                Heading = Helper.gigsIamAttending
+                
+            };
+            return View("Gigs",gigViewModel);
         }
 
         // GET: GigsController/Details/5

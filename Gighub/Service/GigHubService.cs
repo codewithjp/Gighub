@@ -18,6 +18,12 @@ namespace Gighub.Service
             _appDB = appDB;
         }
 
+        public async Task<IEnumerable<Gig>> GetGigsAttending(string userId)
+        {
+            var gigs = await _appDB.Attendances.Where(a => a.Userid == userId).Include(a => a.Gig.AppUser).Include(a => a.Gig.Genre)
+                .Select(a => a.Gig).ToListAsync();
+            return gigs;
+        }
 
         public async Task<int> SaveFollowing(Following following)
         {
@@ -51,7 +57,7 @@ namespace Gighub.Service
 
         public IEnumerable<Gig> GetGigs()
         {
-            return _appDB.Gig.Include(g => g.AppUser).Include(g=>g.Genre).Where(g => g.DateTime > DateTime.Now);
+            return _appDB.Gig.Include(g => g.AppUser).Include(g=>g.Genre).Where(g => g.DateTime > DateTime.Now).ToList();
         }
 
 

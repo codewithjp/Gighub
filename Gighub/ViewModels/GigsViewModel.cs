@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gighub.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -23,6 +24,11 @@ namespace Gighub.ViewModels
         [Required]
         [Display(Name ="Genre")]
         public int GenreId { get; set; }
+
+        public IEnumerable<Gig> UpComingGigs { get;  set; }
+
+        public string Heading { get; set; }
+
         public DateTime GetDateTime() 
         {
             return DateTime.Parse(string.Format("{0} {1}", Date, Time));

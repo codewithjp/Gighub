@@ -44,7 +44,7 @@ namespace Gighub.Controllers
             {
                 var user = await _userManager.FindByNameAsync(model.Email);
 
-                return RedirectToAction("Index", "Gigs");
+                return RedirectToAction("Index", "Home");
             }
             ModelState.AddModelError("", "Invalid Credentials");
             return View(model);
@@ -83,7 +83,7 @@ namespace Gighub.Controllers
                 {
                     TempData["newUserSignup"] = user.Email;
                 }
-                return RedirectToAction("Index", "Gigs");
+                return RedirectToAction("Index", "Home");
             }
                 foreach (var item in result.Errors)
                 {

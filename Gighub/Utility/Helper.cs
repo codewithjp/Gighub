@@ -18,7 +18,10 @@ namespace Gighub.Utility
 
         public static string followerAdded = "Follower added successfully.";
         public static string followerExist = "You already follow the artist.";
-      
+
+        public static string gigsIamAttending= "Gigs I'm Attending";
+        public static string upcomingGigs= "Upcoming Gigs";
+
         public static string appointmentNotExists = "Appointment not exists.";
         public static string meetingConfirm = "Meeting confirm successfully.";
         public static string meetingConfirmError = "Error while confirming meeting.";
@@ -27,7 +30,7 @@ namespace Gighub.Utility
         public static string somethingWentWrong = "Something went wront, Please try again.";
         public static int success_code = 1;
         public static int failure_code = 0;
-
+      
 
         public static IEnumerable<SelectListItem> GetRoles(bool isAdmin)
         {
