@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static Gighub.Utility.Helper;
 
 namespace Gighub.Controllers.Api
 {
@@ -34,11 +35,28 @@ namespace Gighub.Controllers.Api
             try
             {
                 var gigInDb = _gigHubService.GetGigsByGigId(id, _userManager.GetUserId(User));
-                gigInDb.IsCanceled = true;
+               if(gigInDb.IsCanceled)
+                {
+                    commonResponse.Status = Helper.failure_code;
+                    commonResponse.Message = Helper.cancelGigFail;
+                }
+                else
+                {
+                    gigInDb.IsCanceled = true;
+                    await _gigHubService.SaveChangesAsync();
 
-              await _gigHubService.SaveChangesAsync();
-                commonResponse.Status = Helper.success_code;
-                commonResponse.Message = Helper.cancelGigSuccess;
+                    // Send Notification to Attendee
+                    var notification = new Notification
+                    {
+                        DateTime = DateTime.Now,
+                       Type =(int)NotificationType.GigCanceled,
+                        Gig = gigInDb
+                    };
+
+                    await _gigHubService.SendNotification(notification, id);
+                    commonResponse.Status = Helper.success_code;
+                    commonResponse.Message = Helper.cancelGigSuccess;
+                }
             }
             catch (Exception e)
             {

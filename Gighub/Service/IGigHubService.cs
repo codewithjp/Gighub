@@ -23,5 +23,9 @@ namespace Gighub.Service
         public Task<int> SaveFollowing(Following following);
 
         public Task<IEnumerable<Gig>> GetGigsAttending(string userId);
+
+        public Task SendNotification(Notification notification,int gigId);
+        public Task<IEnumerable<Notification>> GetUserNotificationAsync(string userId);
+
     }
 }

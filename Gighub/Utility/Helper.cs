@@ -26,7 +26,7 @@ namespace Gighub.Utility
         public static string hEditGig= "Edit a Gigs";
 
         public static string cancelGigSuccess = "Gig is canceled successfully.";
-        public static string cancelGigFail = "There is some problem. Gig is not canceled.";
+        public static string cancelGigFail = "The gig is already canceled.";
 
         public static string meetingConfirm = "Meeting confirm successfully.";
         public static string meetingConfirmError = "Error while confirming meeting.";
@@ -35,7 +35,17 @@ namespace Gighub.Utility
         public static string somethingWentWrong = "Something went wront, Please try again.";
         public static int success_code = 1;
         public static int failure_code = 0;
-      
+
+
+
+
+        public  enum NotificationType
+        {
+            GigCanceled=1,
+            GigUpdated=2,
+            GigCreated=3
+        }
+
 
         public static IEnumerable<SelectListItem> GetRoles(bool isAdmin)
         {

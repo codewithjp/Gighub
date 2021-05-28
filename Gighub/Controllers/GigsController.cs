@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using static Gighub.Utility.Helper;
 
 namespace Gighub.Controllers
 {
@@ -106,7 +107,7 @@ namespace Gighub.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Update(GigsViewModel model)
         {
-            ViewBag.GenreList = _gigHubService.GetGenres().GetAwaiter().GetResult();
+            ViewBag.GenreList =  _gigHubService.GetGenres().GetAwaiter().GetResult();
 
             if (!ModelState.IsValid)
                 return View(model);
@@ -118,35 +119,20 @@ namespace Gighub.Controllers
                 ArtistId = User.FindFirstValue(ClaimTypes.NameIdentifier),
                 Id = model.GigId
             };
-
-          _gigHubService.UpdateGig(gig); //Update a gig
-           return RedirectToAction(nameof(Mine));
-        }
-
-        // GET: GigsController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: GigsController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
+            // Notification
+            var notification = new Notification
             {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+                DateTime = DateTime.Now,
+                Type = (int)NotificationType.GigUpdated,
+                Gig = gig
+            };
+             _gigHubService.SendNotification(notification, model.GigId);
+
+            _gigHubService.UpdateGig(gig); //Update a gig
+            return RedirectToAction(nameof(Mine));
         }
+
+       
+       
     }
 }

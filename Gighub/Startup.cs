@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+
 namespace Gighub
 {
     public class Startup
@@ -33,7 +34,9 @@ namespace Gighub
             services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<AppDBContext>();
             services.AddTransient<IGigHubService, GigHubService>();
             services.AddScoped<IDBInitializer, DBInitializer.DBInitializer>();
-           
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -7,42 +7,31 @@
     <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
     <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
     <link href="~/lib/Datepicker/bootstrap-datetimepicker.css" rel="stylesheet" />
+    <link href="~/lib/animate/animate.min.css" rel="stylesheet" />
     <link href="~/lib/toastr.js/toastr.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm   border-bottom box-shadow mb-3 fixed-top bg-light">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+    <header class="p-3 mb-3 border-bottom shadow-sm">
+        <div class="container">
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
                     <img src="~/images/gigs.png" height="40" alt="logo" />
                 </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link " asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link " asp-area="" asp-controller="Gigs" asp-action="Create">Add a Gig</a>
-                        </li>
-                    </ul>
-                </div>
 
-                <form class="d-flex input-group w-auto">
-                    <input type="search" class="form-control" placeholder="Type query" aria-label="Search" />
-                    <button class="btn btn-outline-primary" type="button" data-mdb-ripple-color="dark" style="padding: .45rem 1.5rem .35rem;">
-                        Search
-                    </button>
+                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                    <li> <a class="nav-link " asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li> <a class="nav-link " asp-area="" asp-controller="Gigs" asp-action="Create">Add a Gig</a></li>
+                    
+                </ul>
+
+                <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+                    <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
                 </form>
-                <partial name="_LoginPartial" />
 
-
+            <partial name="_LoginPartial"/>
             </div>
-        </nav>
+        </div>
     </header>
     <div class="container">
         <main role="main" class="pb-3">
@@ -64,5 +53,52 @@
     <script src="~/lib/sweet-alert/sweetalert2.all.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        $(document).ready(function () {
+            var notifications;
+            $.getJSON("/api/Notifications/GetNotification", function (response) {
+                notifications = response.dataenum;
+                $('.js-notifications-count').text(notifications.length)
+                    .removeClass('hide').addClass('animate__animated animate__bounceInDown');
+
+                if (notifications.length == 0)
+                    return;
+                $('.notification').popover({
+                    title: 'Notifications',
+                    html: true,
+                    placement: 'bottom',
+                    content: function () {
+                        var html = '';
+                        notifications.forEach(function (notification) {
+                            if (notification.type === 1)
+                                html = html + `<li><b>${notification.gigDto.artist.name} </b>
+                                        has canceled the gig at ${notification.gigDto.venue} at
+                                        ${moment(notification.gigDto.dateTime).format('DD MMM yyyy')}</li>`
+                            if (notification.type === 2) {
+                               
+                                if (notification.gigDto.venue != notification.orignalVenue)
+                                    html = html + `<li> <b>${notification.gigDto.artist.name} </b>
+                                        has changed the venue of the gig
+                                        from  ${ notification.orignalVenue}
+                                        to ${ notification.gigDto.venue}
+                                        </li >`
+
+                                if (notification.gigDto.vedateTimenue != notification.orignalDateTime)
+                                    html = html + `<li> <b>${notification.gigDto.artist.name} </b>
+                                        has changed the date/time of the gig
+                                        from  ${ moment(notification.orignalDateTime).format('DD MMM yyyy HH:mm') }
+                                        to ${ moment(notification.gigDto.dateTime).format('DD MMM yyyy HH:mm')}
+                                        </li >`
+                            }
+                        });
+                        var list = `<ul class="notifications"> ${html} </ul>`;
+                        return list;
+                    }
+                })
+            })
+          
+            
+        })
+    </script>
 </body>
 </html>

@@ -18,10 +18,13 @@ namespace Gighub.Data
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Attendance> Attendances { get; set; }
         public DbSet<Following> Followings { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
+        public DbSet<UserNotification> UserNotofications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<Following>().HasKey(f => new {f.FolloweeId,f.FollowerId });
+            builder.Entity<UserNotification>().HasKey(n => new {n.NotificationId,n.UserId });
           // builder.Entity<Following>().HasNoKey();
            // builder.Entity<Following>().HasOne(u => u.Followee).WithMany(u => u.Follower).IsRequired().OnDelete(DeleteBehavior.Restrict);
            // builder.Entity<Following>().HasOne(u => u.Follower).WithMany(u => u.Followee).IsRequired().OnDelete(DeleteBehavior.Restrict);

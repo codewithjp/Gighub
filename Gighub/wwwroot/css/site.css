@@ -4,7 +4,7 @@ for details on configuring this project to bundle and minify static web assets. 
 a.navbar-brand {
   white-space: normal;
   text-align: center;
-  word-break: break-all;
+  word-break: keep-all;
 }
 
 /* Provide sufficient contrast against white background */
@@ -54,7 +54,7 @@ html {
 body {
     /* Margin bottom by footer height */
     margin-bottom: 60px;
-    padding-top: 80px;
+   /* padding-top: 80px;*/
 }
 .footer {
   position: absolute;
@@ -142,3 +142,28 @@ body {
 a,.btn-link {
     text-decoration: none
 }
+
+.notification{
+    position:relative;
+}
+
+    .notification .comment {
+        position: absolute;
+        top: 2px;
+        right:11px;
+        font-weight:700;
+    }
+
+ul.notifications{
+    list-style:none;
+    padding-left:2px;
+}
+ul.notifications>li{
+border-bottom:1px solid #ddd;
+padding:7px 0;
+}
+
+    ul.notifications > li:last-child {
+        border-bottom:none;
+        
+    }

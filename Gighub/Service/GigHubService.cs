@@ -19,6 +19,38 @@ namespace Gighub.Service
         }
 
 
+        public async Task<IEnumerable<Notification>> GetUserNotificationAsync(string userId)
+        {
+            var notification = await _appDB.UserNotofications.Where(un => un.UserId == userId && !un.IsRead)
+                                    .Include(un=>un.Notification).ThenInclude(n=>n.Gig)
+                                    .ThenInclude(g=>g.AppUser)
+                                    .Select(un => un.Notification) 
+                                    .OrderBy(n=>n.DateTime).ToListAsync();
+            return notification;
+        }
+
+
+        public async Task SendNotification(Notification notification,int gigId)
+        {
+            var gig = _appDB.Attendances.Where(a => a.GigId == gigId).Include(a=>a.AppUser)
+                        .Include(a=>a.Gig).ToList();
+
+            notification.OrignalDateTime = gig.FirstOrDefault().Gig.DateTime;
+            notification.OrignalVenue = gig.FirstOrDefault().Gig.Venue;
+
+            foreach (var item in gig)
+            {
+                var userNotification = new UserNotification
+                {
+                    AppUser=item.AppUser,
+                    Notification=notification
+                };
+              await  _appDB.UserNotofications.AddAsync(userNotification);
+            }
+           await _appDB.SaveChangesAsync();
+        }
+
+
         public void UpdateGig(Gig gig)
         {
             _appDB.Gig.Update(gig);
