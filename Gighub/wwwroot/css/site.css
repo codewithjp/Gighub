@@ -166,4 +166,14 @@ padding:7px 0;
     ul.notifications > li:last-child {
         border-bottom:none;
         
-    }
+    
+        }
+
+
+.simplebox {
+   
+   
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;
+}

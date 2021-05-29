@@ -21,6 +21,7 @@ namespace Gighub.Utility
 
         public static string hGigsIamAttending= "Gigs I'm Attending";
         public static string hUpcomingGigs= "Upcoming Gigs";
+        public static string hSearch = "Search Result";
 
         public static string hAddGig= "Add a Gig";
         public static string hEditGig= "Edit a Gigs";

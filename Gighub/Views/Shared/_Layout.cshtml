@@ -22,14 +22,20 @@
                 <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                     <li> <a class="nav-link " asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                     <li> <a class="nav-link " asp-area="" asp-controller="Gigs" asp-action="Create">Add a Gig</a></li>
-                    
+
                 </ul>
 
-                <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-                    <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
-                </form>
+                
 
-            <partial name="_LoginPartial"/>
+                
+                <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" method="post" asp-action="Search" asp-controller="Home">
+                    <div class="input-group ">
+                        <input type="search" name="Query"  value="@ViewBag.Query" class="form-control simplebox" placeholder="Search..." aria-label="Search"/>
+                        <button type="submit" class="input-group-text bg-warning"> <i class="fas fa-search"></i></button>
+                    </div>
+                        </form>
+               
+                <partial name="_LoginPartial" />
             </div>
         </div>
     </header>
@@ -58,11 +64,12 @@
             var notifications;
             $.getJSON("/api/Notifications/GetNotification", function (response) {
                 notifications = response.dataenum;
+                if (notifications.length == 0)
+                    return;
                 $('.js-notifications-count').text(notifications.length)
                     .removeClass('hide').addClass('animate__animated animate__bounceInDown');
 
-                if (notifications.length == 0)
-                    return;
+                
                 $('.notification').popover({
                     title: 'Notifications',
                     html: true,
@@ -94,6 +101,15 @@
                         var list = `<ul class="notifications"> ${html} </ul>`;
                         return list;
                     }
+                }).on("shown.bs.popover", function () {
+
+                    $.post('/api/Notifications/MarkAsRead')
+                        .done(function () {
+                            $('.js-notifications-count').text('').addClass('hide');
+                        })
+                        .fail(() => {
+                            console.log('There is some problem')
+                        })
                 })
             })
           

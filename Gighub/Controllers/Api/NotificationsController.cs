@@ -43,5 +43,14 @@ namespace Gighub.Controllers.Api
            
             return Ok(commonResponse);
         }
+
+
+        [HttpPost("MarkAsRead")]
+        public async Task<IActionResult> MarkAsRead()
+        {
+          var userId = _userManager.GetUserId(User);
+           await _gigHubService.ReadNotificationAsync(userId);
+            return Ok();
+        }
     }
 }

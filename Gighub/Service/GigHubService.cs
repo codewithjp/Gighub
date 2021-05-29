@@ -19,9 +19,27 @@ namespace Gighub.Service
         }
 
 
+
+        public IEnumerable<Gig> Search(string query)
+        {
+            var result = _appDB.Gig.Where(g => g.Venue.Contains(query)
+                      || g.Genre.Name.Contains(query) || g.AppUser.Name.Contains(query))
+                        .ToList();
+            return result;
+        }
+
+        public async Task ReadNotificationAsync(string userId)
+        {
+            var notifications = await _appDB.UserNotifications
+                        .Where(n => n.UserId == userId && !n.IsRead).ToListAsync();
+
+            notifications.ForEach(n => n.IsRead = true);
+            await _appDB.SaveChangesAsync();
+        }
+
         public async Task<IEnumerable<Notification>> GetUserNotificationAsync(string userId)
         {
-            var notification = await _appDB.UserNotofications.Where(un => un.UserId == userId && !un.IsRead)
+            var notification = await _appDB.UserNotifications.Where(un => un.UserId == userId && !un.IsRead)
                                     .Include(un=>un.Notification).ThenInclude(n=>n.Gig)
                                     .ThenInclude(g=>g.AppUser)
                                     .Select(un => un.Notification) 
@@ -45,7 +63,7 @@ namespace Gighub.Service
                     AppUser=item.AppUser,
                     Notification=notification
                 };
-              await  _appDB.UserNotofications.AddAsync(userNotification);
+              await  _appDB.UserNotifications.AddAsync(userNotification);
             }
            await _appDB.SaveChangesAsync();
         }
@@ -112,13 +130,16 @@ namespace Gighub.Service
 
         public IEnumerable<Gig> GetGigs()
         {
-            return _appDB.Gig.Include(g => g.AppUser).Include(g=>g.Genre).Where(g => g.DateTime > DateTime.Now && !g.IsCanceled).OrderBy(a => a.DateTime).ToList();
+            return _appDB.Gig.Include(g => g.AppUser).Include(g=>g.Genre)
+                .Where(g => g.DateTime > DateTime.Now && !g.IsCanceled)
+                .OrderBy(a => a.DateTime).ToList();
         }
 
         public async Task<IEnumerable<Gig>> GetGigsByUserId(string userId)
         {
             var gigs= await _appDB.Gig.Include(g => g.AppUser).Include(g => g.Genre)
-                            .Where(g => g.DateTime > DateTime.Now && g.ArtistId==userId && !g.IsCanceled).OrderBy(a => a.DateTime).ToListAsync();
+                            .Where(g => g.DateTime > DateTime.Now && g.ArtistId==userId && !g.IsCanceled)
+                            .OrderBy(a => a.DateTime).ToListAsync();
             return gigs;
         }
 

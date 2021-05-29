@@ -43,7 +43,7 @@ namespace Gighub.ViewModels
                 return (action.Body as MethodCallExpression).Method.Name;
             } }
 
-
+        public string Query { get;  set; }
 
         public DateTime GetDateTime() 
         {

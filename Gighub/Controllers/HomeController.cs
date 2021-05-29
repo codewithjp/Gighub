@@ -23,14 +23,28 @@ namespace Gighub.Controllers
             _gigHubService = gigHubService;
         }
 
-        public IActionResult Index()
+        [HttpPost]
+        public ActionResult Search(string query)
         {
-            var gigs = _gigHubService.GetGigs();
 
+            return RedirectToAction("Index", new { query });
+        }
+
+
+        public IActionResult Index(string query=null)
+        {
+           var gigs = _gigHubService.GetGigs();
+
+            if (!String.IsNullOrEmpty(query))
+            {
+                gigs = _gigHubService.Search(query);
+                ViewBag.Query = query;
+            }
             var gigViewModel = new GigsViewModel()
             {
                 UpComingGigs = gigs,
-                Heading = Helper.hUpcomingGigs
+                Heading = query == null ? Helper.hUpcomingGigs : Helper.hSearch,
+                Query=query
             };
             return View("Gigs",gigViewModel); 
         }

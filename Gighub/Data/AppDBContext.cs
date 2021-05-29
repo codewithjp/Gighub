@@ -19,7 +19,7 @@ namespace Gighub.Data
         public DbSet<Attendance> Attendances { get; set; }
         public DbSet<Following> Followings { get; set; }
         public DbSet<Notification> Notifications { get; set; }
-        public DbSet<UserNotification> UserNotofications { get; set; }
+        public DbSet<UserNotification> UserNotifications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

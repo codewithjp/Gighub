@@ -26,6 +26,9 @@ namespace Gighub.Service
 
         public Task SendNotification(Notification notification,int gigId);
         public Task<IEnumerable<Notification>> GetUserNotificationAsync(string userId);
+        public Task ReadNotificationAsync(string userId);
+
+        public IEnumerable<Gig> Search(string query);
 
     }
 }
