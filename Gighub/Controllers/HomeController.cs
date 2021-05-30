@@ -1,8 +1,10 @@
 ﻿
+using Gighub.Data;
 using Gighub.Models;
 using Gighub.Service;
 using Gighub.Utility;
 using Gighub.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -15,11 +17,11 @@ namespace Gighub.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly UserManager<AppUser> _userManager;
         private readonly IGigHubService _gigHubService;
-       public HomeController(ILogger<HomeController> logger, IGigHubService gigHubService)
+       public HomeController(UserManager<AppUser> userManager, IGigHubService gigHubService)
         {
-            _logger = logger;
+            _userManager = userManager;
             _gigHubService = gigHubService;
         }
 
@@ -31,8 +33,9 @@ namespace Gighub.Controllers
         }
 
 
-        public IActionResult Index(string query=null)
+        public async Task<IActionResult> Index(string query=null)
         {
+            var userId = _userManager.GetUserId(User);
            var gigs = _gigHubService.GetGigs();
 
             if (!String.IsNullOrEmpty(query))
@@ -40,12 +43,19 @@ namespace Gighub.Controllers
                 gigs = _gigHubService.Search(query);
                 ViewBag.Query = query;
             }
+
+            var attendance = await _gigHubService.GetGigsAttending(userId);
+            var filteredAttenDances = attendance.ToLookup(a => a.GigId);
+
             var gigViewModel = new GigsViewModel()
             {
                 UpComingGigs = gigs,
                 Heading = query == null ? Helper.hUpcomingGigs : Helper.hSearch,
-                Query=query
+                Query = query,
+                Attendances=filteredAttenDances,
+                Followings= await _gigHubService.GetFollowings(userId)
             };
+
             return View("Gigs",gigViewModel); 
         }
 

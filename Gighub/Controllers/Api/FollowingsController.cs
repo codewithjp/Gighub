@@ -37,8 +37,8 @@ namespace Gighub.Controllers.Api
                     FolloweeId = dto.FolloweeId,
                     FollowerId = User.FindFirstValue(ClaimTypes.NameIdentifier)
                 };
-                commonResponse.Status = await _gigHubService.SaveFollowing(following);
-                commonResponse.Message = commonResponse.Status == 1 ? Helper.followerAdded : Helper.followerExist;
+                commonResponse.Status = await _gigHubService.ToggleFollowing(following);
+                commonResponse.Message = commonResponse.Status == 1 ? Helper.followerAdded : Helper.followerDeleted;
             }
             catch (Exception ex)
             {

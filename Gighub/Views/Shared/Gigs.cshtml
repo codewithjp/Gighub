@@ -35,13 +35,17 @@
             </div>
             <div class="details">
                 <div class="artist">
-                    @gig.AppUser.Name
+                    <a asp-action="Details" asp-controller="Gigs" asp-route-id="@gig.Id" > @gig.AppUser.Name</a>
                 </div>
                 <span class="genre">@gig.Genre.Name</span>
                 @if (User.Identity.IsAuthenticated)
                 {
-                    <button class="btn btn-sm btn-light toggle-attendance" data-id="@gig.Id">Going?</button>
-                    <button class="btn btn-sm btn-link toggle-follow" data-id="@gig.ArtistId">Follow?</button>
+            <button class="btn btn-sm @(Model.Attendances.Contains(gig.Id)?"btn-info":"btn-light")
+                            toggle-attendance" data-id="@gig.Id">
+                @(Model.Attendances.Contains(gig.Id)?"Going": "Going?")
+            </button>
+                    <button class="btn btn-sm btn-link toggle-follow" data-id="@gig.ArtistId">
+                     @(Model.Followings.ToLookup(f=>f.FolloweeId).Contains(gig.ArtistId)? "Following" : "Follow?")   </button>
                 }
             </div>
         </li>
@@ -54,14 +58,17 @@
         $(document).ready(function () {
             $(".toggle-attendance").click(function (e) {
                 var button = $(e.target);
+                
                 $.post('/api/Attendances/attend/' + button.attr("data-id"))
                     .done((response) => {
                         if (response.status == 1) {
                             button.removeClass('btn-light').addClass('btn-info').text('Going');
                             toastr.success(response.message);
                         }
-                        else
-                            toastr.error(response.message);
+                        else {
+                            button.removeClass('btn-info').addClass('btn-light').text('Going?');
+                            toastr.info(response.message);
+                        }
                     })
                     .fail(function (jqXHR, textStatus, errorThrown) {
                         toastr.error(`Something went wrong.`);
@@ -83,8 +90,10 @@
                             button.text('Following');
                             toastr.success(response.message);
                         }
-                        else
-                            toastr.error(response.message);
+                        else {
+                            button.text('Follow?');
+                            toastr.warning(response.message);
+                        }
                     })
                     .fail(function (jqXHR, textStatus, errorThrown) {
                         toastr.error(`Something went wrong.`);

@@ -25,5 +25,7 @@ namespace Gighub.Models
 
         [ForeignKey("GenreId")]
         public Genre Genre { get; set; }
+
+        public ICollection<Attendance> Attendances { get; set; }
     }
 }

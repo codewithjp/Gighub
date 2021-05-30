@@ -13,11 +13,11 @@ namespace Gighub.Utility
         public const string Admin = "Admin";
         public const string Follower = "Follower";
 
-        public static string attendanceAdded = "Attendance added successfully.";
-        public static string attendanceExists = "Attendance already exists for selected gig.";
+        public static string attendanceAdded = "You are  going to this event.";
+        public static string attendanceDeleted = "You are not going to this event.";
 
-        public static string followerAdded = "Follower added successfully.";
-        public static string followerExist = "You already follow the artist.";
+        public static string followerAdded = "You are following this artist.";
+        public static string followerDeleted = "You are not following this artist.";
 
         public static string hGigsIamAttending= "Gigs I'm Attending";
         public static string hUpcomingGigs= "Upcoming Gigs";

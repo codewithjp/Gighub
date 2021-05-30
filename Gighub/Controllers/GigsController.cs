@@ -29,6 +29,21 @@ namespace Gighub.Controllers
             _userManager = userManager;
         }
 
+
+        [AllowAnonymous]
+        public  async Task<IActionResult> Details(int id)
+        {
+            var userId = _userManager.GetUserId(User);
+            var result = await  _gigHubService.GetGigDetails(id,userId);
+           
+            return View(result);
+        }
+
+
+
+
+
+
         public async Task<IActionResult> Mine()
         {
             var gigs = await _gigHubService.GetGigsByUserId(_userManager.GetUserId(User));
@@ -38,10 +53,10 @@ namespace Gighub.Controllers
 
         public async Task<IActionResult> Attending()
         {
-            var gigs = await _gigHubService.GetGigsAttending(_userManager.GetUserId(User));
+            var attendance = await _gigHubService.GetGigsAttending(_userManager.GetUserId(User));
             var gigViewModel = new GigsViewModel()
             {
-                UpComingGigs = gigs,
+                UpComingGigs = attendance.Select(a=>a.Gig),
                 Heading = Helper.hGigsIamAttending
                 
             };
@@ -89,7 +104,7 @@ namespace Gighub.Controllers
         {
            
             ViewBag.GenreList = await _gigHubService.GetGenres();
-            var gig = _gigHubService.GetGigsByGigId(id, _userManager.GetUserId(User));
+            var gig = _gigHubService.GetGigsByGigIdAndUserId(id, _userManager.GetUserId(User));
             var gigViewModel = new GigsViewModel
             {
                 GenreId = gig.GenreId,

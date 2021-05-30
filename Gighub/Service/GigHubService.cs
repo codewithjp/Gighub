@@ -19,6 +19,13 @@ namespace Gighub.Service
         }
 
 
+        public async Task<IEnumerable<Following>> GetFollowings(string userId)
+        {
+            return await _appDB.Followings
+                            .Where(f => f.FollowerId == userId).ToListAsync();
+        }
+
+
 
         public IEnumerable<Gig> Search(string query)
         {
@@ -28,7 +35,7 @@ namespace Gighub.Service
             return result;
         }
 
-        public async Task ReadNotificationAsync(string userId)
+        public async Task MarkAsReadNotificationAsync(string userId)
         {
             var notifications = await _appDB.UserNotifications
                         .Where(n => n.UserId == userId && !n.IsRead).ToListAsync();
@@ -82,50 +89,78 @@ namespace Gighub.Service
         }
 
 
-
-        public Gig GetGigsByGigId(int gigId, string userId)
+        public async  Task<GigDetailViewModel> GetGigDetails(int gigId,string userId)
         {
-            var gig = _appDB.Gig.Single(g => g.Id == gigId && g.ArtistId==userId);
+            var gig = await _appDB.Gig.Include(g=>g.AppUser).Include(g=>g.Genre)
+                       .SingleAsync(g => g.Id == gigId);
+
+            var isFollowing = await _appDB.Followings.AnyAsync(f => f.FollowerId == userId);
+
+            var isAttending = await _appDB.Attendances.AnyAsync(f => f.Userid == userId);
+
+            var gigDetailVM = new GigDetailViewModel
+            {
+                Gig=gig,
+                IsAttending=isAttending,
+                IsFollowing=isFollowing
+            };
+           
+            return gigDetailVM;
+        }
+
+
+        public Gig GetGigsByGigIdAndUserId(int gigId, string userId)
+        {
+            var gig = _appDB.Gig.Include(g => g.Genre).Include(g => g.AppUser)
+                        .Single(g => g.Id == gigId && g.ArtistId==userId);
 
             return gig;
         }
 
 
-        public async Task<IEnumerable<Gig>> GetGigsAttending(string userId)
+        public async Task<IEnumerable<Attendance>> GetGigsAttending(string userId)
         {
-            var gigs = await _appDB.Attendances.Where(a => a.Userid == userId).Include(a => a.Gig.AppUser).Include(a => a.Gig.Genre)
-                .Select(a => a.Gig).OrderBy(a=>a.DateTime).ToListAsync();
-            return gigs;
+            var attendance = await _appDB.Attendances.Where(a => a.Userid == userId)
+                .Include(a => a.Gig.AppUser).Include(a => a.Gig.Genre)
+               .OrderBy(a=>a.Gig.DateTime).ToListAsync();
+            return attendance;
         }
 
-        public async Task<int> SaveFollowing(Following following)
+        public async Task<int> ToggleFollowing(Following following)
         {
-            var exists = await _appDB.Followings.AnyAsync(a => a.FollowerId == following.FollowerId && a.FolloweeId == following.FolloweeId);
-            if (exists)
-                return 0;
-            var follow = new Following
+            var followerInDb = await _appDB.Followings.FirstOrDefaultAsync(a => a.FollowerId == following.FollowerId && a.FolloweeId == following.FolloweeId);
+            if (followerInDb != null)
             {
-                FolloweeId = following.FolloweeId,
-                FollowerId = following.FollowerId
-            };
-            await _appDB.Followings.AddAsync(follow);
-            await _appDB.SaveChangesAsync();
-            return 1;
+                _appDB.Followings.Remove(followerInDb);
+                await _appDB.SaveChangesAsync();
+                return 0;
+            }
+            else
+            {
+                await _appDB.Followings.AddAsync(following);
+                await _appDB.SaveChangesAsync();
+                return 1;
+            }
+            
         }
 
-        public async Task<int> SaveAttendance(Attendance atten)
+        public async Task<int> ToggleAttendance(Attendance atten)
         {
-            var exists = await _appDB.Attendances.AnyAsync(a => a.Userid == atten.Userid && a.GigId == atten.GigId);
-            if (exists)
-                return 0;
-            var attendance = new Attendance
+            var attendanceInDb = await _appDB.Attendances.FirstOrDefaultAsync(a => a.Userid == atten.Userid && a.GigId == atten.GigId);
+            if (attendanceInDb!=null)
             {
-                GigId= atten.GigId,
-                Userid= atten.Userid
-            };
-            await _appDB.Attendances.AddAsync(attendance);
-            await _appDB.SaveChangesAsync();
-            return 1;
+                 _appDB.Attendances.Remove(attendanceInDb);
+                await _appDB.SaveChangesAsync();
+                return 0;
+            }
+            else
+            {
+                await _appDB.Attendances.AddAsync(atten);
+                await _appDB.SaveChangesAsync();
+                return 1;
+            }
+               
+            
         }
 
         public IEnumerable<Gig> GetGigs()

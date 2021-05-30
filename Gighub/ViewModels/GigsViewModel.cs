@@ -44,6 +44,8 @@ namespace Gighub.ViewModels
             } }
 
         public string Query { get;  set; }
+        public ILookup<int, Attendance> Attendances { get;  set; }
+        public IEnumerable<Following> Followings { get;  set; }
 
         public DateTime GetDateTime() 
         {

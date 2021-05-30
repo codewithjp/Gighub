@@ -46,8 +46,8 @@ namespace Gighub.Controllers.Api
                     GigId = id,
                     Userid = _userManager.GetUserId(User)  //User.FindFirstValue(ClaimTypes.NameIdentifier)
                 };
-                commonResponse.Status = await _gigHubService.SaveAttendance(attendance);
-                commonResponse.Message = commonResponse.Status==1 ? Helper.attendanceAdded : Helper.attendanceExists;
+                commonResponse.Status = await _gigHubService.ToggleAttendance(attendance);
+                commonResponse.Message = commonResponse.Status==1 ? Helper.attendanceAdded : Helper.attendanceDeleted;
             }
             catch (Exception ex)
             {

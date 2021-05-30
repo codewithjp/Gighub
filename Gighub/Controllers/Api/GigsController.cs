@@ -34,7 +34,7 @@ namespace Gighub.Controllers.Api
             CommonResponse<int> commonResponse = new();
             try
             {
-                var gigInDb = _gigHubService.GetGigsByGigId(id, _userManager.GetUserId(User));
+                var gigInDb = _gigHubService.GetGigsByGigIdAndUserId(id, _userManager.GetUserId(User));
                if(gigInDb.IsCanceled)
                 {
                     commonResponse.Status = Helper.failure_code;

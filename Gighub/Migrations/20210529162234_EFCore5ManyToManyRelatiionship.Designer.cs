@@ -4,14 +4,16 @@ using Gighub.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Gighub.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20210529162234_EFCore5ManyToManyRelatiionship")]
+    partial class EFCore5ManyToManyRelatiionship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -265,8 +267,8 @@ namespace Gighub.Migrations
                     b.Property<string>("Genre")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("MovieName")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<byte>("MovieName")
+                        .HasColumnType("tinyint");
 
                     b.Property<DateTime>("ReleaseDate")
                         .HasColumnType("datetime2");

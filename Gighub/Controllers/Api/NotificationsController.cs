@@ -49,7 +49,7 @@ namespace Gighub.Controllers.Api
         public async Task<IActionResult> MarkAsRead()
         {
           var userId = _userManager.GetUserId(User);
-           await _gigHubService.ReadNotificationAsync(userId);
+           await _gigHubService.MarkAsReadNotificationAsync(userId);
             return Ok();
         }
     }
