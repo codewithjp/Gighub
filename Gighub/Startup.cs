@@ -36,6 +36,12 @@ namespace Gighub
             services.AddScoped<IDBInitializer, DBInitializer.DBInitializer>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+            services.AddAuthentication().AddGoogle(op =>
+            {
+                op.ClientId = Configuration["Google:ClientId"];
+                op.ClientSecret = Configuration["Google:ClientSecret"];
+                op.CallbackPath = "/signin-google";
+            });
 
         }
 
@@ -68,6 +74,11 @@ namespace Gighub
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+            });
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
             });
         }
     }

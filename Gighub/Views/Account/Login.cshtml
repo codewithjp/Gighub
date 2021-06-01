@@ -13,7 +13,7 @@
             <!-- Email input -->
             <div class="form-group mb-2">
                 <label class="form-label" asp-for="Email"></label>
-                <input asp-for="Email" class="form-control" autofocus/>
+                <input asp-for="Email" class="form-control" autofocus />
                 <span class="text-danger" asp-validation-for="Email"></span>
             </div>
 
@@ -43,13 +43,39 @@
             <!-- Submit button -->
             <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-primary d-grid gap-2 ">Sign in</button>
-                <p>Don't have an account?  <a asp-action="Register" >Sign up</a></p>
             </div>
-           
+
         </form>
     </div>
 </div>
-@section scripts{ 
-@{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<div class="row">
+    <div class="col-md-4">
+
+
+        @if (Model.ExternalLogins.Count != 0)
+
+        {
+        <form method="post" asp-action="ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl">
+
+            @foreach (var provider in Model.ExternalLogins)
+            {
+            <div class="d-grid gap-2">
+                <span class="text-center"> OR</span>
+                <button type="submit" name="provider" value="@provider.Name" class="btn btn-outline-primary d-grid gap-2 "
+                        title="Login using your @provider.DisplayName account">
+                 Sign in with   @provider.Name
+                </button>
+            </div>
+                    }
+            </form>
+        }
+
+        <p>Don't have an account?  <a asp-action="Register">Sign up</a></p>
+
+    </div>
+</div>
+
+@section scripts{
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
 }

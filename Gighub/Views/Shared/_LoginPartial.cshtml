@@ -1,8 +1,15 @@
 ﻿
 @inject Microsoft.AspNetCore.Identity.SignInManager<Gighub.Data.AppUser> signInManager
+@inject Microsoft.AspNetCore.Identity.UserManager<Gighub.Data.AppUser> userManager
+@using System.Security.Claims;
 
 @if (signInManager.IsSignedIn(User))
 {
+ 
+  var user = await userManager.FindByNameAsync(User.Identity.Name);
+
+   
+
     <form method="post" id="logoutForm" asp-action="Logoff" asp-controller="Account" asp-area="">
         <div class="text-end ">
             <a class="float-start notification " title="Notifications" href="javascript:void(0);">
@@ -11,12 +18,16 @@
             </a>
             <a href="#" class="d-block ms-5 text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
                 @*<img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">*@
-              Hello,  @User.Identity.Name
+                Hello, @user.Name
             </a>
             <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1" style="">
                 <li><a class="dropdown-item" asp-action="Mine" asp-controller="Gigs" asp-area="">My Upcoming Gigs</a></li>
                 <li><a class="dropdown-item" asp-action="Attending" asp-controller="Gigs" asp-area="">Gigs I'm Going</a></li>
                 <li><hr class="dropdown-divider"></li>
+                @if (User.IsInRole(Gighub.Utility.Helper.Admin))
+                {
+                    <li><a class="dropdown-item" asp-action="Register" asp-controller="Account">Add New Admin</a></li>
+                }
                 <li><a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit()">Log Out</a></li>
             </ul>
         </div>
@@ -24,10 +35,10 @@
 }
 else
 {
-<div class=" text-end">
-    <a class="btn btn-outline-primary me-2" asp-action="Login" asp-controller="Account" asp-area="">Log n</a>
-    <a class="btn btn-warning" asp-action="Register" asp-controller="Account" asp-area="">Sign-up</a>
-</div>
+    <div class=" text-end">
+        <a class="btn btn-outline-primary me-2" asp-action="Login" asp-controller="Account" asp-area="">Log in</a>
+        <a class="btn btn-warning" asp-action="Register" asp-controller="Account" asp-area="">Sign-up</a>
+    </div>
 
- 
+
 }
