@@ -19,6 +19,8 @@ namespace Gighub.Service
         }
 
 
+        
+
         public async Task<IEnumerable<Following>> GetFollowings(string userId)
         {
             return await _appDB.Followings
@@ -63,6 +65,9 @@ namespace Gighub.Service
             notification.OrignalDateTime = gig.FirstOrDefault().Gig.DateTime;
             notification.OrignalVenue = gig.FirstOrDefault().Gig.Venue;
 
+
+            var userNotList = new List<UserNotification>();
+
             foreach (var item in gig)
             {
                 var userNotification = new UserNotification
@@ -70,9 +75,10 @@ namespace Gighub.Service
                     AppUser=item.AppUser,
                     Notification=notification
                 };
-              await  _appDB.UserNotifications.AddAsync(userNotification);
+                userNotList.Add(userNotification);
             }
-           await _appDB.SaveChangesAsync();
+            await _appDB.UserNotifications.AddRangeAsync(userNotList);
+            await _appDB.SaveChangesAsync();
         }
 
 

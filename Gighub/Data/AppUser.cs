@@ -15,6 +15,10 @@ namespace Gighub.Data
         [StringLength(100)]
         public string Name { get; set; }
         public bool IsPhotoUploaded { get; set; }
+        public string FilePath { get; set; }
+        public string FileName { get; set; }
+        public DateTime? UpdateDate { get; set; }
+
 
 
         public ICollection<Following> Followee { get; set; }

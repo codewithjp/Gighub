@@ -17,7 +17,15 @@
                 <span class="text-danger comment js-notifications-count hide"></span>
             </a>
             <a href="#" class="d-block ms-5 text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                @*<img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">*@
+                @if (user.IsPhotoUploaded)
+                {
+                    <img src="/@user.FilePath" alt="mdo" width="32" height="32" class="rounded-circle" id="img-login">
+                }
+                else
+                {
+                    <img src="~/images/no-pic.jpg" alt="mdo" width="32" height="32" class="rounded-circle" id="img-login">
+                }
+
                 Hello, @user.Name
             </a>
             <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1" style="">
@@ -28,6 +36,7 @@
                 {
                     <li><a class="dropdown-item" asp-action="Register" asp-controller="Account">Add New Admin</a></li>
                 }
+                <li><a class="dropdown-item" asp-action="Updateprofile" asp-controller="Account">Update Profile</a></li>
                 <li><a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit()">Log Out</a></li>
             </ul>
         </div>

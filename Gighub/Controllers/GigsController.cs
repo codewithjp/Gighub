@@ -141,9 +141,9 @@ namespace Gighub.Controllers
                 Type = (int)NotificationType.GigUpdated,
                 Gig = gig
             };
-             _gigHubService.SendNotification(notification, model.GigId);
-
             _gigHubService.UpdateGig(gig); //Update a gig
+            _gigHubService.SendNotification(notification, model.GigId).GetAwaiter().GetResult(); ;
+          
             return RedirectToAction(nameof(Mine));
         }
 

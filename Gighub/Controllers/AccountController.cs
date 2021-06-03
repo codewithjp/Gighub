@@ -2,10 +2,12 @@
 using Gighub.Utility;
 using Gighub.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -17,11 +19,14 @@ namespace Gighub.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, RoleManager<IdentityRole> roleManager)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager,
+                RoleManager<IdentityRole> roleManager,IWebHostEnvironment webHostEnvironment)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _webHostEnvironment = webHostEnvironment;
         }
         public async Task<IActionResult> Logoff()
         {
@@ -30,8 +35,54 @@ namespace Gighub.Controllers
         }
 
 
+        public async Task<IActionResult> Updateprofile()
+        {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var uploadPicVM = new UploadProfileVM
+            {
+                Isuploaded = user.IsPhotoUploaded,
+                FilePath=user.FilePath
+            };
+            return View(uploadPicVM);
+        }
 
-        
+        [HttpPost]
+        public async Task<IActionResult> Updateprofile(UploadProfileVM model)
+        {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (model.ProfileImage == null || !ModelState.IsValid)
+                ModelState.AddModelError("", "File not found.");
+
+            var oldPath = Path.Combine(_webHostEnvironment.WebRootPath, user.FilePath);
+
+            if (System.IO.File.Exists(oldPath))
+                System.IO.File.Delete(oldPath);
+
+
+
+            string fileName = $"{Guid.NewGuid()}{model.ProfileImage.FileName}";
+            string localPath = $"images/profile/{fileName}";
+            string filePath = Path.Combine(_webHostEnvironment.WebRootPath, localPath);
+
+            using (var fileStream=new FileStream(filePath,FileMode.Create))
+            {
+              await  model.ProfileImage.CopyToAsync(fileStream);
+            }
+
+            user.IsPhotoUploaded = true;
+            user.UpdateDate = DateTime.Now;
+            user.FilePath = localPath;
+            user.FileName = fileName;
+            await _userManager.UpdateAsync(user);
+
+            model.FilePath = localPath;
+            model.Isuploaded = true;
+            ViewBag.msg = "Profile picture is updated successfully.";
+          
+            return View(model);
+        }
+
+
         [HttpPost]
        
         public IActionResult ExternalLogin(string provider, string returnUrl)

@@ -1,0 +1,86 @@
+﻿
+@model Gighub.ViewModels.UploadProfileVM
+
+@{
+    ViewData["Title"] = "Upload Profile Picture";
+}
+
+
+
+<div class="row mt-2">
+    <div class="col-md-5">
+        <div class="card border shadow mb-3">
+            <div class="card-header bg-info text-white"><b>@ViewData["Title"]</b></div>
+            <div class="card-body">
+                <form asp-action="Updateprofile" method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="form-group mb-2 row">
+                        <div class="col-9">
+                            <label class="form-label" asp-for="ProfileImage"></label>
+                            <input asp-for="ProfileImage" class="form-control" accept="image/jpg ,image/png, image/jpeg" />
+                            <span class="text-danger" asp-validation-for="ProfileImage"></span>
+                        </div>
+                        <div class="col-3">
+                            @if (Model.Isuploaded)
+                            {
+                                <img src="/@Model.FilePath" id="profile-img" class="rounded-circle" height="100" width="100" />
+                            }
+                            else
+                            {
+                                <img src="~/images/no-pic.jpg" id="profile-img" class="rounded-circle" height="100" width="100" />
+                            }
+
+                        </div>
+
+                    </div>
+
+                    @if (ViewBag.msg != null)
+                    {
+                    <div class="form-group mb-2 row">
+                        <div class="alert alert-success  alert-dismissible fade show" role="alert">
+                            <strong>
+                                <i class="fas fa-check-circle "></i>&nbsp;
+                                @ViewBag.msg
+                            </strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                    }
+
+
+
+                    <div class="form-group mt-4">
+
+                        <input type="submit" class="btn  btn-primary" />&nbsp;
+                        <input type="reset" value="Cancel" class="btn btn-outline-info" />
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+
+        $("#ProfileImage").on("change", function () {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $("#profile-img").attr("src", e.target.result)
+                $("#img-login").attr("src", e.target.result)
+            }
+            reader.readAsDataURL($(this)[0].files[0]);
+        })
+    </script>
+
+}
+
+
