@@ -5,10 +5,10 @@
 
 @if (signInManager.IsSignedIn(User))
 {
- 
-  var user = await userManager.FindByNameAsync(User.Identity.Name);
 
-   
+    var user = await userManager.FindByNameAsync(User.Identity.Name);
+
+
 
     <form method="post" id="logoutForm" asp-action="Logoff" asp-controller="Account" asp-area="">
         <div class="text-end ">
@@ -42,3 +42,7 @@ else
 
 
 }
+
+
+
+   

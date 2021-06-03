@@ -17,7 +17,7 @@
     </div>
 }
 <hr />
-<ul class="ul-gigs">
+<ul class="ul-gigs" id="gigs">
 
     @foreach (var gig in Model.UpComingGigs)
     {
@@ -35,17 +35,18 @@
             </div>
             <div class="details">
                 <div class="artist">
-                    <a asp-action="Details" asp-controller="Gigs" asp-route-id="@gig.Id" > @gig.AppUser.Name</a>
+                    <a asp-action="Details" asp-controller="Gigs" asp-route-id="@gig.Id"> @gig.AppUser.Name</a>
                 </div>
                 <span class="genre">@gig.Genre.Name</span>
                 @if (User.Identity.IsAuthenticated)
                 {
-            <button class="btn btn-sm @(Model.Attendances.Contains(gig.Id)?"btn-info":"btn-light")
+                    <button class="btn btn-sm @(Model.Attendances.Contains(gig.Id)?"btn-info":"btn-light")
                             toggle-attendance" data-id="@gig.Id">
-                @(Model.Attendances.Contains(gig.Id)?"Going": "Going?")
-            </button>
-                    <button class="btn btn-sm btn-link toggle-follow" data-id="@gig.ArtistId">
-                     @(Model.Followings.ToLookup(f=>f.FolloweeId).Contains(gig.ArtistId)? "Following" : "Follow?")   </button>
+                        @(Model.Attendances.Contains(gig.Id)?"Going": "Going?")
+                    </button>
+                    @*<button class="btn btn-sm btn-link toggle-follow" data-id="@gig.ArtistId">
+                         @(Model.Followings.ToLookup(f=>f.FolloweeId).Contains(gig.ArtistId)? "Following" : "Follow?")
+                        </button>*@
                 }
             </div>
         </li>
@@ -53,59 +54,12 @@
 </ul>
 
 @section scripts{
-
+    <script src="~/js/Services/AttendanceService.js"></script>
+    <script src="~/js/Controller/GigsController.js"></script>
     <script>
         $(document).ready(function () {
-            $(".toggle-attendance").click(function (e) {
-                var button = $(e.target);
-                
-                $.post('/api/Attendances/attend/' + button.attr("data-id"))
-                    .done((response) => {
-                        if (response.status == 1) {
-                            button.removeClass('btn-light').addClass('btn-info').text('Going');
-                            toastr.success(response.message);
-                        }
-                        else {
-                            button.removeClass('btn-info').addClass('btn-light').text('Going?');
-                            toastr.info(response.message);
-                        }
-                    })
-                    .fail(function (jqXHR, textStatus, errorThrown) {
-                        toastr.error(`Something went wrong.`);
-                    })
-            })
-
-
-            $(".toggle-follow").click(function (e) {
-                var button = $(e.target);
-                $.ajax({
-
-                    url: '/api/Followings/follow',
-                    data: JSON.stringify({ followeeId: button.attr("data-id") }),
-                    contentType: 'application/json',
-                    method: 'Post'
-                })
-                    .done((response) => {
-                        if (response.status == 1) {
-                            button.text('Following');
-                            toastr.success(response.message);
-                        }
-                        else {
-                            button.text('Follow?');
-                            toastr.warning(response.message);
-                        }
-                    })
-                    .fail(function (jqXHR, textStatus, errorThrown) {
-                        toastr.error(`Something went wrong.`);
-                    })
-            })
-
-
+            GigsController.init("#gigs");
         })
-
-
-
-
     </script>
 
 }

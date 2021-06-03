@@ -128,10 +128,11 @@ namespace Gighub.Controllers
             var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.IsRememberMe, false);
             if(result.Succeeded)
             {
-               var user = await _userManager.FindByNameAsync(model.Email);
+              // var user = await _userManager.FindByNameAsync(model.Email);
 
                 return RedirectToAction("Index", "Home");
             }
+            model.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             ModelState.AddModelError("", "Invalid Credentials");
             return View(model);
         }

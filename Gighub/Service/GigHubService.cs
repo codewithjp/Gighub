@@ -96,7 +96,7 @@ namespace Gighub.Service
 
             var isFollowing = await _appDB.Followings.AnyAsync(f => f.FollowerId == userId);
 
-            var isAttending = await _appDB.Attendances.AnyAsync(f => f.Userid == userId);
+            var isAttending = await _appDB.Attendances.AnyAsync(f => f.Userid == userId && f.GigId==gigId);
 
             var gigDetailVM = new GigDetailViewModel
             {

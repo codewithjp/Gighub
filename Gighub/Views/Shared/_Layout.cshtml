@@ -25,16 +25,16 @@
 
                 </ul>
 
-                
 
-                
-                <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" method="post" asp-action="Search" asp-controller="Home">
-                    <div class="input-group ">
-                        <input type="search" name="Query"  value="@ViewBag.Query" class="form-control simplebox" placeholder="Search..." aria-label="Search"/>
+
+
+                <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3 " method="post" asp-action="Search" asp-controller="Home">
+                    <div class="input-group justify-content-center">
+                        <input type="search" name="Query" value="@ViewBag.Query" class="form-control simplebox" placeholder="Search..." aria-label="Search" />
                         <button type="submit" class="input-group-text bg-warning"> <i class="fas fa-search"></i></button>
                     </div>
-                        </form>
-               
+                </form>
+
                 <partial name="_LoginPartial" />
             </div>
         </div>
@@ -57,64 +57,21 @@
     <script src="~/lib/Datepicker/bootstrap-datetimepicker.min.js"></script>
     <script src="~/lib/toastr.js/toastr.min.js"></script>
     <script src="~/lib/sweet-alert/sweetalert2.all.min.js"></script>
+    <script src="~/js/app.js"></script>
+
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+
+
+    <script src="~/js/Services/NotificationService.js"></script>
+    <script src="~/js/Controller/NotificationController.js"></script>
+
     <script>
         $(document).ready(function () {
-            var notifications;
-            $.getJSON("/api/Notifications/GetNotification", function (response) {
-                notifications = response.dataenum;
-                if (notifications.length == 0)
-                    return;
-                $('.js-notifications-count').text(notifications.length)
-                    .removeClass('hide').addClass('animate__animated animate__bounceInDown');
-
-                
-                $('.notification').popover({
-                    title: 'Notifications',
-                    html: true,
-                    placement: 'bottom',
-                    content: function () {
-                        var html = '';
-                        notifications.forEach(function (notification) {
-                            if (notification.type === 1)
-                                html = html + `<li><b>${notification.gigDto.artist.name} </b>
-                                        has canceled the gig at ${notification.gigDto.venue} at
-                                        ${moment(notification.gigDto.dateTime).format('DD MMM yyyy')}</li>`
-                            if (notification.type === 2) {
-                               
-                                if (notification.gigDto.venue != notification.orignalVenue)
-                                    html = html + `<li> <b>${notification.gigDto.artist.name} </b>
-                                        has changed the venue of the gig
-                                        from  ${ notification.orignalVenue}
-                                        to ${ notification.gigDto.venue}
-                                        </li >`
-
-                                if (notification.gigDto.vedateTimenue != notification.orignalDateTime)
-                                    html = html + `<li> <b>${notification.gigDto.artist.name} </b>
-                                        has changed the date/time of the gig
-                                        from  ${ moment(notification.orignalDateTime).format('DD MMM yyyy HH:mm') }
-                                        to ${ moment(notification.gigDto.dateTime).format('DD MMM yyyy HH:mm')}
-                                        </li >`
-                            }
-                        });
-                        var list = `<ul class="notifications"> ${html} </ul>`;
-                        return list;
-                    }
-                }).on("shown.bs.popover", function () {
-
-                    $.post('/api/Notifications/MarkAsRead')
-                        .done(function () {
-                            $('.js-notifications-count').text('').addClass('hide');
-                        })
-                        .fail(() => {
-                            console.log('There is some problem')
-                        })
-                })
-            })
-          
-            
+            NotificationController.init();
         })
     </script>
+
 </body>
 </html>

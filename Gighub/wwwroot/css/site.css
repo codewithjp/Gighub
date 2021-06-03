@@ -176,4 +176,5 @@ padding:7px 0;
     -webkit-box-shadow: none !important;
     -moz-box-shadow: none !important;
     box-shadow: none !important;
+    max-width:250px;
 }

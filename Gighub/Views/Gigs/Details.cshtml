@@ -8,29 +8,40 @@
 <hr />
 
 
-<div class="row">
+<div class="row" id="gigs">
     <div class="col-12">
         <h3 class="float-start me-2">@Model.Gig.AppUser.Name</h3>
 
         @if (User.Identity.IsAuthenticated)
         {
-            <button type="button" class="btn btn-sm
-            @(Model.IsFollowing?"btn-info": "btn-outline-secondary") ">
+           
+            <button class="btn btn-sm  toggle-follow @(Model.IsFollowing?"btn-info": "btn-outline-secondary")"
+                    data-id="@Model.Gig.ArtistId">
                 @(Model.IsFollowing?"Following": "Follow?")
             </button>
         }
     </div>
     <p>
         Performing at @Model.Gig.Venue on @Model.Gig.DateTime.ToString("dd MMM yyyy")
-      at  @Model.Gig.DateTime.ToString("HH:mm")
+        at  @Model.Gig.DateTime.ToString("HH:mm")
     </p>
 
     @if (Model.IsAttending && User.Identity.IsAuthenticated)
     {
         <p>You are going to this event.</p>
     }
-    
+
 </div>
 
+@section scripts{
+    <script src="~/js/Services/FollowingService.js"></script>
+    <script src="~/js/Controller/DetailsController.js"></script>
+    <script>
+        $(document).ready(function () {
+            DetailsController.init("#gigs");
+
+        })
+    </script>
+}
 
 
